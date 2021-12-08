@@ -6,7 +6,7 @@
 /*   By: zmahmoud <zmahmoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:42:42 by zmahmoud          #+#    #+#             */
-/*   Updated: 2021/12/05 18:57:10 by zmahmoud         ###   ########.fr       */
+/*   Updated: 2021/12/07 22:42:11 by zmahmoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,23 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+void *ft_free(int count, ...)
+{
+	va_list args;
+	int		i;
+
+	va_start(args, count);
+	i = 0;	
+	while (i < count)
+	{
+		free(va_arg(args, void *));
+		i++;
+	}
+	va_end(args);
+	return (NULL);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	s1_len;
 	size_t	s2_len;
@@ -38,6 +54,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_memcpy(ret, s1, s1_len);
 	ft_memcpy(ret + s1_len, s2, s2_len);
 	ret[s1_len + s2_len] = '\0';
+	
 	return (ret);
 }
 

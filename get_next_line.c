@@ -6,95 +6,79 @@
 /*   By: zmahmoud <zmahmoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:02:05 by zmahmoud          #+#    #+#             */
-/*   Updated: 2021/12/05 19:01:26 by zmahmoud         ###   ########.fr       */
+/*   Updated: 2021/12/08 15:52:10 by zmahmoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// C program to illustrate 
-// read system Call 
 
 #include "get_next_line.h"
 #include <stdio.h>
 #include <fcntl.h>
-
-void *ft_free(int count, ...)
+int	new_line_position(char const *str)
 {
-	va_list args;
-	int		i;
+	int	i;
 
-	va_start(args, count);
-	i = 0;	
-	while (i < count)
+	i = 0;
+	while(str[i])
 	{
-		free(va_arg(args, void *));
-		i++;
+		if (str[i] == '\n')
+			return (i);
 	}
-	va_end(args);
-	return (NULL);
+	return (-1)
 }
 
+void function(char **backup, int n)
+{
+	char *line; 
+
+	line = ft_substr(*backup, 0, n);
+	free(backup)
+}
 
 char	*get_next_line(int fd)
 {
-	static char	*str = NULL;
+	static char *backup;
 	char		*buffer;
-	char		*p1;
-	char		*p2;
-	int			i;
-	buffer = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!str)
-		str = (char *)ft_calloc(1, sizeof(char));
-	if (fd == -1 || !buffer || !str)
-		return (ft_free(2, buffer, str));
-	if (read(fd, buffer, BUFFER_SIZE) == -1)
-		return (NULL);
-	i = 0;
-	while (buffer[i] != '\0')
+	char		*line;
+	int			rd;
+	int			n;
+
+	rd = 1;
+	buffer = ft_calloc(1, sizeof(char));
+	line = ft_calloc(1, sizeof(char));
+	if (!backup)
+		backup = ft_calloc(1, sizeof(char));
+		
+	if (fd == -1 || !buffer || !backup || !line)
+		return (0);
+	while (rd > 0)
 	{
-		if(buffer[i] == '\n')
+		rd = read(fd, buffer, BUFFER_SIZE);
+		if (rd == -1 || BUFFER_SIZE == 0)
+			return (0);
+		n = new_line_position(buffer);
+		if (n != -1)
 		{
-			p1 = ft_substr(buffer, 0, i + 1);
-			p2 = ft_strjoin(str, p1);
-			printf("\np2 = |%s|", p2);
-			ft_free(2, p1, str);
-			str = ft_substr(&buffer[i + 1], 0, ft_strlen(&buffer[i + 1]));
-			return (p2);
+			backup = ft_strjoin(backup, buffer);
+			
+			
 		}
-		i++;
+		else
+			backup = ft_strjoin(backup, buffer);
+		
 	}
 	
-	str = ft_strjoin(str, buffer);
-	return str;
+	
+	
 }
-
 
 int main() 
 { 
 
- 	int fd;
-    // int i = 0;
-    // char *c = (char *) calloc(100, sizeof(char));
-	// printf("buffer = |%s|\n", buffer);
+ 	int	fd;
+	int	i;
+
     fd = open("test.txt", O_RDWR | O_CREAT);
-
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);
-	get_next_line(fd);get_next_line(fd);
-	
-
+	i = 0;
+	while(i++ < 2)
+		printf("%s", get_next_line(fd));
 }
