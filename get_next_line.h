@@ -1,20 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zmahmoud <zmahmoud@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/09 18:54:18 by zmahmoud          #+#    #+#             */
+/*   Updated: 2021/12/09 21:55:49 by zmahmoud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef  GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-
-#include <stdlib.h>
-# include <stdarg.h> 
-#include <unistd.h>
-#include <stdio.h>
-
+# include <stdlib.h>
+# include <unistd.h>
 
 size_t	ft_strlen(const char *s);
-void	*ft_free(int count, ...);
-void	ft_bzero(void *str, size_t n);
 char	*get_next_line(int fd);
-void	*ft_memcpy(void *dest, const void *src, size_t n);
-char	*ft_strjoin(char *s1, char *s2);
-void	*ft_calloc(size_t count, size_t size);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+char    *ft_strjoin(char  **s1, char  **s2);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+void	*ft_free(char **p);
+
 
 #endif

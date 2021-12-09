@@ -6,79 +6,93 @@
 /*   By: zmahmoud <zmahmoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:02:05 by zmahmoud          #+#    #+#             */
-/*   Updated: 2021/12/08 15:52:10 by zmahmoud         ###   ########.fr       */
+/*   Updated: 2021/12/09 23:24:49 by zmahmoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 #include <fcntl.h>
+#include <stdio.h>
 int	new_line_position(char const *str)
 {
 	int	i;
 
 	i = 0;
-	while(str[i])
+	while(str[i] != '\0')
 	{
 		if (str[i] == '\n')
 			return (i);
+		i++;
 	}
-	return (-1)
+	if (i == 0)
+		return (-2);
+	return (-1);
 }
 
-void function(char **backup, int n)
+char	*ft_ret(char **rest)
 {
-	char *line; 
-
-	line = ft_substr(*backup, 0, n);
-	free(backup)
+	char	*line;
+	char	*tmp;
+	int		n;
+	
+	if (!*rest || **rest == '\0')
+		return (ft_free(rest));	
+	n = new_line_position(*rest);
+	if (n > -1)
+	{
+		line =  ft_substr(*rest, 0, n + 1);
+		tmp = ft_substr(*rest, n + 1, ft_strlen(*rest + n + 1));
+		ft_free(rest);
+		*rest = tmp;
+		return (line);
+	}
+	else
+	{
+		line = ft_substr(*rest, 0, ft_strlen(*rest));
+		ft_free(rest);
+		return (line);
+	}
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
-	static char *backup;
+	static char *rest;
 	char		*buffer;
-	char		*line;
 	int			rd;
 	int			n;
 
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (fd < 0 || !buffer)
+		return (ft_free(&buffer));
+	if (!rest)
+	{
+		rest = (char *)malloc(1 * sizeof(char));
+		if (!rest)
+			return (NULL);
+		rest[0] = '\0';
+	}
 	rd = 1;
-	buffer = ft_calloc(1, sizeof(char));
-	line = ft_calloc(1, sizeof(char));
-	if (!backup)
-		backup = ft_calloc(1, sizeof(char));
-		
-	if (fd == -1 || !buffer || !backup || !line)
-		return (0);
 	while (rd > 0)
 	{
 		rd = read(fd, buffer, BUFFER_SIZE);
-		if (rd == -1 || BUFFER_SIZE == 0)
-			return (0);
-		n = new_line_position(buffer);
-		if (n != -1)
+		if (rd < 0)
 		{
-			backup = ft_strjoin(backup, buffer);
-			
-			
+			ft_free(&buffer);
+			return (ft_free(&rest));			
 		}
-		else
-			backup = ft_strjoin(backup, buffer);
-		
+		buffer[rd] = '\0';
+		n = new_line_position(buffer);
+		if (n > -1)
+		{
+			rest = ft_strjoin(&rest, &buffer);
+			break;
+		}
+		else if (n == -2)
+			break;
+		rest = ft_strjoin(&rest, &buffer);
 	}
-	
-	
-	
+	ft_free(&buffer);
+	return (ft_ret(&rest));
 }
 
-int main() 
-{ 
-
- 	int	fd;
-	int	i;
-
-    fd = open("test.txt", O_RDWR | O_CREAT);
-	i = 0;
-	while(i++ < 2)
-		printf("%s", get_next_line(fd));
-}
